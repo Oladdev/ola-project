@@ -68,7 +68,7 @@ const plainMotion = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const motion: typeof motionLib = IS_TEST ? (plainMotion as any) : motionLib;
 
-const PassthroughAnimatePresence: React.FC<AnimatePresenceProps> = ({ children }) => (
+const PassthroughAnimatePresence: React.FC<React.PropsWithChildren<AnimatePresenceProps>> = ({ children }) => (
   <>{children}</>
 );
 
