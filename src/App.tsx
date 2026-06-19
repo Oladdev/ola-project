@@ -97,6 +97,12 @@ const INITIAL_WISHES: WishItem[] = [
     author: "Imade",
     date: "June 19",
   },
+  {
+    id: 14,
+    text: "Happy Birthday Rita! Wishing you a day as amazing as you are. I wish you all the good things of life and many more birthdays to celebrate",
+    author: "Ayomide",
+    date: "June 20",
+  },
 ];
 
 /* ── localStorage persistence for user-submitted wishes ── */
