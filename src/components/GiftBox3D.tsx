@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import './GiftBox3D.css';
 
 interface GiftBox3DProps {
   onOpen: () => void;

@@ -1,0 +1,260 @@
+/* === Cake3D Component Styles === */
+
+@keyframes flicker {
+  0%, 100% { transform: scale(1) rotate(-2deg); opacity: 0.9; }
+  50% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+  25% { transform: scale(0.95) rotate(0deg); opacity: 0.8; }
+  75% { transform: scale(1.05) rotate(-1deg); opacity: 0.95; }
+}
+
+@keyframes smoke-rise {
+  0% { transform: translateY(0) scale(0.5); opacity: 0.8; }
+  50% { transform: translateY(-20px) translateX(-5px) scale(1.2); opacity: 0.4; }
+  100% { transform: translateY(-40px) translateX(5px) scale(2); opacity: 0; }
+}
+
+@keyframes rainbow-glow {
+  0% { filter: hue-rotate(0deg) brightness(1.1); }
+  100% { filter: hue-rotate(360deg) brightness(1.3); }
+}
+
+@keyframes text-pulse-anim {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* 3D CAKE LAYOUT & PERSPECTIVE */
+.cake-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 350px;
+  position: relative;
+}
+
+.cake-container-3d {
+  width: 220px;
+  height: 180px;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(20deg) rotateY(-15deg);
+  transition: transform 0.5s ease;
+}
+
+.cake-container-3d:hover {
+  transform: rotateX(22deg) rotateY(-8deg);
+}
+
+/* Platter Plate */
+.plate-3d {
+  position: absolute;
+  bottom: 0;
+  left: -20px;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, rgba(255,255,255,0.02) 80%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  transform: rotateX(90deg) translateZ(-40px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Cake Layer cylinders */
+.cake-layer-3d {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+
+.layer-bottom {
+  width: 200px;
+  height: 70px;
+  bottom: 10px;
+  left: 10px;
+  z-index: 2;
+  transform-style: preserve-3d;
+}
+
+.layer-top {
+  width: 140px;
+  height: 55px;
+  bottom: 80px;
+  left: 40px;
+  z-index: 4;
+  transform-style: preserve-3d;
+}
+
+/* Cylindrical faces emulation */
+.layer-face {
+  position: absolute;
+}
+
+.layer-top-face {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  transform: rotateX(90deg);
+  background: radial-gradient(circle, #fbcfe8 0%, #f472b6 80%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  top: -50%;
+  transform-style: preserve-3d;
+}
+
+.layer-bottom .layer-top-face {
+  background: radial-gradient(circle, #e9d5ff 0%, #a855f7 80%);
+}
+
+.layer-side-face {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #ec4899 0%, #db2777 50%, #be185d 100%);
+  clip-path: ellipse(50% 15% at 50% 0%);
+  border-bottom: 2px solid rgba(0,0,0,0.15);
+}
+
+.layer-bottom .layer-side-face {
+  background: linear-gradient(to right, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
+}
+
+/* Candle layout */
+.candles-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.candle-wrapper {
+  position: absolute;
+  top: 0;
+  transform-style: preserve-3d;
+  pointer-events: auto;
+}
+
+.candle-interactive-area {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  position: relative;
+  transform-style: preserve-3d;
+  width: 44px;
+  height: 75px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.candle-body {
+  width: 8px;
+  background: linear-gradient(to right, #38bdf8, #0ea5e9);
+  border-radius: 4px;
+  position: relative;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.candle-wick {
+  position: absolute;
+  top: -4px;
+  left: 3px;
+  width: 2px;
+  height: 5px;
+  background: #334155;
+}
+
+.candle-flame {
+  position: absolute;
+  top: -16px;
+  left: -2px;
+  width: 12px;
+  height: 14px;
+  background: radial-gradient(circle, #fef08a 0%, #f97316 70%);
+  border-radius: 50% 50% 20% 20%;
+  transform-origin: center bottom;
+  animation: flicker 0.6s infinite alternate;
+  box-shadow: 0 0 15px #f97316, 0 0 5px #eab308;
+}
+
+.flame-inner {
+  position: absolute;
+  bottom: 1px;
+  left: 3px;
+  width: 6px;
+  height: 7px;
+  background: radial-gradient(circle, #fff 0%, #60a5fa 90%);
+  border-radius: 50% 50% 20% 20%;
+}
+
+.smoke-puff {
+  position: absolute;
+  top: -15px;
+  left: 0px;
+  width: 8px;
+  height: 8px;
+  background: rgba(226, 232, 240, 0.6);
+  border-radius: 50%;
+  animation: smoke-rise 0.8s forwards ease-out;
+}
+
+/* Glowing cake when all candles are blown out */
+.cake-glowing .layer-top-face {
+  background: radial-gradient(circle, #a78bfa 0%, #db2777 60%, #ec4899 100%);
+  animation: rainbow-glow 3s infinite alternate;
+  box-shadow: 0 0 35px rgba(236, 72, 153, 0.4);
+}
+
+.cake-glowing .layer-bottom .layer-top-face {
+  background: radial-gradient(circle, #a78bfa 0%, #7c3aed 60%, #6366f1 100%);
+  animation: rainbow-glow 3s infinite alternate-reverse;
+}
+
+.cake-status-panel {
+  margin-top: 25px;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.greetings-bubble {
+  padding: 12px 24px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.glow-text {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f472b6;
+  text-shadow: 0 0 10px rgba(244, 114, 182, 0.4);
+  margin-bottom: 5px;
+}
+
+.reset-btn {
+  margin-top: 10px;
+  background: rgba(192, 132, 252, 0.2);
+  border: 1px solid rgba(192, 132, 252, 0.4);
+  color: #e9d5ff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.reset-btn:hover {
+  background: rgba(192, 132, 252, 0.3);
+}
+
+.text-pulse {
+  animation: text-pulse-anim 1.5s infinite ease-in-out;
+}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import './AudioTheme.css';
 
 export const AudioTheme: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);

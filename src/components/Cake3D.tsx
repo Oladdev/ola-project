@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import './Cake3D.css';
 
 interface Cake3DProps {
   onCakeBlownOut: () => void;
@@ -22,34 +23,60 @@ export const Cake3D: React.FC<Cake3DProps> = ({ onCakeBlownOut }) => {
   ]);
   const [allExtinguished, setAllExtinguished] = useState(false);
 
+  /**
+   * Shared AudioContext — reused across all candle blow-out sounds.
+   * Avoids the browser-cap bug where each click created a new context
+   * (Chrome limits to ~6 concurrent AudioContext instances).
+   */
+  const audioCtxRef = useRef<AudioContext | null>(null);
+
+  const getAudioContext = (): AudioContext | null => {
+    try {
+      if (!audioCtxRef.current || audioCtxRef.current.state === 'closed') {
+        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+        if (!AudioCtx) return null;
+        audioCtxRef.current = new AudioCtx();
+      }
+      return audioCtxRef.current;
+    } catch {
+      return null;
+    }
+  };
+
+  // Clean up AudioContext on unmount
+  useEffect(() => {
+    return () => {
+      if (audioCtxRef.current) {
+        audioCtxRef.current.close();
+        audioCtxRef.current = null;
+      }
+    };
+  }, []);
+
   const extinguishCandle = (id: number) => {
     setCandles((prev) =>
       prev.map((c) => (c.id === id ? { ...c, isLit: false } : c))
     );
 
-    // Play a tiny synthesis pop for audio feedback of blowing out a candle
-    try {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      if (AudioCtx) {
-        const ctx = new AudioCtx();
-        const osc = ctx.createOscillator();
-        const gainNode = ctx.createGain();
-        
-        osc.type = 'sine';
-        // Quick drop in pitch simulating wind/blow sound
-        osc.frequency.setValueAtTime(200, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.15);
+    // Quick synthesis pop for audio feedback — Emil frequency gate:
+    // candle clicks are occasional, so a short sound is appropriate
+    const ctx = getAudioContext();
+    if (ctx) {
+      const osc = ctx.createOscillator();
+      const gainNode = ctx.createGain();
 
-        gainNode.gain.setValueAtTime(0.08, ctx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+      osc.type = 'sine';
+      // Quick drop in pitch simulating wind/blow sound
+      osc.frequency.setValueAtTime(200, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.15);
 
-        osc.connect(gainNode);
-        gainNode.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.15);
-      }
-    } catch (e) {
-      console.warn("AudioContext failed to start for blow sound", e);
+      gainNode.gain.setValueAtTime(0.08, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+
+      osc.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.15);
     }
   };
 
@@ -57,7 +84,7 @@ export const Cake3D: React.FC<Cake3DProps> = ({ onCakeBlownOut }) => {
     const litCount = candles.filter((c) => c.isLit).length;
     if (litCount === 0 && !allExtinguished) {
       setAllExtinguished(true);
-      
+
       // Delay slightly to let the visual transition sink in
       setTimeout(() => {
         onCakeBlownOut();
@@ -122,8 +149,8 @@ export const Cake3D: React.FC<Cake3DProps> = ({ onCakeBlownOut }) => {
 
       <div className="cake-status-panel">
         {allExtinguished ? (
-          <div className="greetings-bubble bounce-in">
-            <h3 className="glow-text">🎉 Magic Unlocked! 🎉</h3>
+          <div className="greetings-bubble">
+            <h3 className="glow-text">Magic Unlocked!</h3>
             <p>Your wishes are ready to be written down.</p>
             <button className="reset-btn" onClick={handleReset}>
               Relight Candles
@@ -131,7 +158,7 @@ export const Cake3D: React.FC<Cake3DProps> = ({ onCakeBlownOut }) => {
           </div>
         ) : (
           <p className="blow-instructions text-pulse" aria-live="polite">
-            🎂 Click each candle to blow it out!
+            Click each candle to blow it out!
           </p>
         )}
       </div>

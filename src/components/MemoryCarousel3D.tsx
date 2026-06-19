@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './MemoryCarousel3D.css';
 
 export interface CarouselItem {
   id: number;
