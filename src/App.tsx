@@ -103,6 +103,12 @@ const INITIAL_WISHES: WishItem[] = [
     author: "Ayomide",
     date: "June 20",
   },
+  {
+    id: 15,
+    text: "Happy birthday Rita, you’ve always been so isolated for some reason but you’re always there to help solve any issues we’re having when you can, thanks so much for that. May the lord continue to add many more years to your liee, more grace and opportunities, Amen! Enjoy your day!",
+    author: "Fortune",
+    date: "June 20",
+  },
 ];
 
 /* ── localStorage persistence for user-submitted wishes ── */
